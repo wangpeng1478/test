@@ -43,15 +43,6 @@
     <div id="ocrbody">
     </div>
     <script>
-    const TOKEN = sessionStorage.getItem('token');  // 关闭重新请求
-
-    $(function() {
-        app.initial()
-        if (TOKEN===null) {
-            sessionStorage.setItem('token', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-        }
-        alert(TOKEN)
-    });
     var app = {
         data: {
             name: 'app',
