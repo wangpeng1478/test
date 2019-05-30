@@ -9,213 +9,219 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="stylesheet" href="weui.min.css">
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/2.0.0/style/weui.min.css">
+    <style>
+        body {
+        background-color: #ededed;
+    }
+    </style>
 </head>
 
 <body>
-    <div class="page__bd">
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    <div class="weui-uploader">
-                        <div class="weui-uploader__hd">
-                            <p class="weui-uploader__title">Face++</p>
+    <div id="app">
+        <form action="" @submit.prevent="submit">
+            <div class="weui-cells__title">个人信息填写</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">姓名</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" v-model="info.name" placeholder="用户姓名">
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">性别</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" v-model="info.gender">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label for="" class="weui-label">出生日期</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="date" v-model="info.birthday">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">手机号</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="tel" v-model="info.tel" placeholder="用户手机号">
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">国家/地区</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" v-model="info.country">
+                            <option value="中国">中国</option>
+                            <option value="美国">美国</option>
+                            <option value="英国">英国</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">备注</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea class="weui-textarea" v-model="info.remarks" placeholder="请输入备注" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area">
+                <button class="weui-btn weui-btn_primary" type="submit">{{id===0?'提交':'修改'}}</button>
+            </div>
+        </form>
+        <div class="weui-panel">
+            <div class="weui-panel__hd">用户列表({{infoList.length}}个)</div>
+            <div class="weui-panel__bd">
+                <div class="weui-form-preview" v-for="(e,index) in infoList" :key="index">
+                    <div class="weui-form-preview__hd">
+                        <label class="weui-form-preview__label">用户名</label>
+                        <em class="weui-form-preview__value">{{e.jsonData.name}}</em>
+                    </div>
+                    <div class="weui-form-preview__bd">
+                        <div class="weui-form-preview__item">
+                            <label class="weui-form-preview__label">性别</label>
+                            <span class="weui-form-preview__value">{{e.jsonData.gender}}</span>
                         </div>
-                        <div class="weui-uploader__bd">
-                            <div class="weui-uploader__input-box">
-                                <input class="weui-uploader__input" type="file" id="file" />
-                            </div>
+                        <div class="weui-form-preview__item">
+                            <label class="weui-form-preview__label">出生日期</label>
+                            <span class="weui-form-preview__value">{{e.jsonData.birthday}}</span>
                         </div>
+                        <div class="weui-form-preview__item">
+                            <label class="weui-form-preview__label">手机号</label>
+                            <span class="weui-form-preview__value">{{e.jsonData.tel}}</span>
+                        </div>
+                        <div class="weui-form-preview__item">
+                            <label class="weui-form-preview__label">国家/地区</label>
+                            <span class="weui-form-preview__value">{{e.jsonData.country}}</span>
+                        </div>
+                        <div class="weui-form-preview__item">
+                            <label class="weui-form-preview__label">添加时间</label>
+                            <span class="weui-form-preview__value">{{e.dateAdd}}</span>
+                        </div>
+                        <div class="weui-form-preview__item" v-if="e.jsonData.remarks">
+                            <label class="weui-form-preview__label">备注</label>
+                            <span class="weui-form-preview__value">{{e.jsonData.remarks}}</span>
+                        </div>
+                    </div>
+                    <div class="weui-form-preview__ft">
+                        <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:" @click="edit(index)">编辑</a>
+                        <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" @click="rem(index)">删除</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <img id="Base64" src="" alt="" height="100">
-    <div class="weui-cells__title">结果</div>
-    <select>
-        <option value="volvo" style="display:none;">display:none</option>
-        <option value="saab" disabled>disabled</option>
-        <option value="saab" hidden>hidden</option>
-    </select>
-    <div id="ocrbody">
-    </div>
-
-    <button id="button">有人想加你为好友</button>
-<p id="text"></p>
-
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="weui.min.js"></script>
     <script>
-    var app = {
+    const vue = new Vue({
+        el: '#app',
         data: {
-            name: 'app',
-            imgBase64: '',
+            id: 0,
+            infoList: [],
+            info: {}
         },
-        initial: function initial() {
-            console.log(this.data.name)
-            this.Base64();
-        },
-        Base64: function Base64() {
-            var vm = this;
-            var eleFile = document.querySelector('#file');
-            // 压缩图片需要的一些元素和对象
-            var reader = new FileReader(),
-                img = new Image();
-            // 选择的文件对象
-            var file = null;
-            // 缩放图片需要的canvas
-            var canvas = document.createElement('canvas');
-            var context = canvas.getContext('2d');
-
-            // base64地址图片加载完毕后
-            img.onload = function() {
-                // 图片原始尺寸
-                var originWidth = this.width;
-                var originHeight = this.height;
-                // 最大尺寸限制
-                var maxWidth = 800,
-                    maxHeight = 800;
-                // 目标尺寸
-                var targetWidth = originWidth,
-                    targetHeight = originHeight;
-                // 图片尺寸超过400x400的限制
-                if (originWidth > maxWidth || originHeight > maxHeight) {
-                    if (originWidth / originHeight > maxWidth / maxHeight) {
-                        // 更宽，按照宽度限定尺寸
-                        targetWidth = maxWidth;
-                        targetHeight = Math.round(maxWidth * (originHeight / originWidth));
+        methods: {
+            get(type) {
+                var vm = this;
+                var loading = weui.loading('loading');
+                $.post('https://api.it120.cc/cfce0392be2649cb5375a66472d6a2b6/json/list', { type: type }, function(re) {
+                    if (re.code === 0) {
+                        vm.infoList = re.data
                     } else {
-                        targetHeight = maxHeight;
-                        targetWidth = Math.round(maxHeight * (originWidth / originHeight));
+                        weui.alert(re.msg);
                     }
-                }
-
-                // canvas对图片进行缩放
-                canvas.width = targetWidth;
-                canvas.height = targetHeight;
-                // 清除画布
-                context.clearRect(0, 0, targetWidth, targetHeight);
-                // 图片压缩
-                context.drawImage(img, 0, 0, targetWidth, targetHeight);
-                var dataURL = canvas.toDataURL("image/png"); //压缩后的base64
-                document.querySelector('#Base64').src = dataURL
-                // vm.AI(dataURL)
-                // canvas转为blob并上传
-                canvas.toBlob(function(blob) {
-                    // console.log(blob)
-                    // // 图片ajax上传
-                    // var xhr = new XMLHttpRequest();
-                    // // 文件上传成功
-                    // xhr.onreadystatechange = function() {
-                    //     if (xhr.status == 200) {
-                    //         // xhr.responseText就是返回的数据
-                    //     }
-                    // };
-                    // // 开始上传
-                    // xhr.open("POST", 'upload.php', true);
-                    // xhr.send(blob);
-                }, file.type || 'image/png');
-            };
-
-            // 文件base64化，以便获知图片原始尺寸
-            reader.onload = function(e) {
-                img.src = e.target.result;
-            };
-            eleFile.addEventListener('change', function(event) {
-                var loading = weui.loading('识别中...', {
-                    className: 'custom-classname'
+                    loading.hide();
                 });
-                file = event.target.files[0];
-                // 选择的文件是图片
-                if (file.type.indexOf("image") == 0) {
-                    reader.readAsDataURL(file);
-                }
-            });
-        },
-        AI: function AI(img) {
-            $.ajax({
-                type: 'post',
-                url: 'https://api-cn.faceplusplus.com/cardpp/v1/ocridcard',
-                data: {
-                    api_key: 'Y9NV1C_caxzytLml2DSLP-RMhQ9CAPfq',
-                    api_secret: '0Zqs_EJheNmw7twjjDk3XLzRP8QaXTmY',
-                    image_base64: img,
-                },
-                dataType: 'json',
-                beforeSend: function(xhr, settings) {
-                    // console.log(settings)
-                },
-                success: function(data, status, xhr) {
-                    if (status == "success") {
-                        console.log(data)
-                        $('#ocrbody').html('');
-                        if (data.cards.length == 0) {
-                            weui.topTips('识别错误');
-                        } else {
-                            weui.toast('识别成功');
-                            var d = data.cards[0]
-                            for (var i in d) {
-                                $('#ocrbody').append('<div class="weui-cell weui-cell_access">' +
-                                    '                 <div class="weui-cell__bd">' + i + '</div>' +
-                                    '                 <div class="weui-cell__ft">' +
-                                    '                    <span>' + d[i] + '</span>' +
-                                    '                </div>' +
-                                    '            </div>')
-                            }
-                        }
+            },
+            submit() {
+                var vm = this;
+                var data = this.info;
+                if (!data.name) {
+                    weui.alert('输入姓名');
+                } else if (!data.gender) {
+                    weui.alert('选择性别');
+                } else if (!data.birthday) {
+                    weui.alert('选择出生日期');
+                } else if (!data.tel) {
+                    weui.alert('选择手机号');
+                } else if (!data.country) {
+                    weui.alert('选择国家');
+                } else {
 
-                    } else {
-                        weui.topTips('Ajax error!')
+                    var setData = {
+                        content: JSON.stringify(data),
+                        type: 'info'
+                    };
+                    if (vm.id != 0) {
+                        setData.id = vm.id;
                     }
-                    $('.custom-classname').remove()
-                },
-                error: function(xhr, type) {
-                    weui.topTips('Ajax error!')
-                    $('.custom-classname').remove()
+                    var loading = weui.loading('提交中');
+                    $.post('https://api.it120.cc/cfce0392be2649cb5375a66472d6a2b6/json/set', setData, function(re) {
+                        if (re.code === 0) {
+                            weui.toast('成功');
+                            vm.info = {};
+                        } else {
+                            weui.alert(re.msg);
+                        }
+                        vm.id = 0;
+                        vm.get('info')
+                        loading.hide();
+                    });
                 }
-            })
-        }
-    }
-    </script>
-    <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a><a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a><a href="#" class="bds_weixin" data-cmd="weixin"></a>
-        <a href="#" data-cmd="weixin">2222</a>
-    </div>
-    <script>
-    window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {}, "image": { "viewList": ["qzone", "tsina", "tqq", "renren", "weixin"], "viewText": "分享到：", "viewSize": "16" }, "selectShare": { "bdContainerClass": null, "bdSelectMiniList": ["qzone", "tsina", "tqq", "renren", "weixin"] } };
-    with(document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
 
+            },
+            edit(index) {
+                window.scrollTo(0, 0);
+                this.info = this.infoList[index].jsonData;
+                this.id = this.infoList[index].id;
+            },
+            rem(index) {
+                var vm = this;
+                weui.confirm(`确定删除${vm.infoList[index].jsonData.name}？`, {
+                    title: '警告',
+                    buttons: [{
+                        label: '取消',
+                        type: 'default',
+                        onClick: function() { console.log('no') }
+                    }, {
+                        label: '删除',
+                        type: 'primary',
+                        onClick: function() {
+                            var loading = weui.loading('删除中');
 
-    if (window.Notification) {
-    var button = document.getElementById('button'), text = document.getElementById('text');
-    
-    var popNotice = function() {
-        if (Notification.permission == "granted") {
-            var notification = new Notification("Hi，帅哥：", {
-                body: '可以加你为好友吗？',
-                icon: '//image.zhangxinxu.com/image/study/s/s128/mm1.jpg'
-            });
-            
-            notification.onclick = function() {
-                text.innerHTML = '张小姐已于' + new Date().toTimeString().split(' ')[0] + '加你为好友！';
-                notification.close();    
-            };
-        }    
-    };
-    
-    button.onclick = function() {
-        if (Notification.permission == "granted") {
-            popNotice();
-        } else if (Notification.permission != "denied") {
-            Notification.requestPermission(function (permission) {
-              popNotice();
-            });
-        }
-    };
-} else {
-    alert('浏览器不支持Notification');    
-}
+                            $.post('https://api.it120.cc/cfce0392be2649cb5375a66472d6a2b6/json/delete', { id: vm.infoList[index].id }, function(re) {
+                                if (re.code === 0) {
 
+                                    weui.toast('删除成功');
+                                    vm.infoList.splice(index, 1);
+
+                                } else {
+                                    weui.alert(re.msg);
+                                }
+                                loading.hide();
+                            });
+                        }
+                    }]
+                });
+            }
+        },
+        mounted() {
+            this.get('info')
+        },
+    })
     </script>
 </body>
 
