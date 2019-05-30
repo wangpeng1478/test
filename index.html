@@ -126,6 +126,16 @@
     <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
     <script src="weui.min.js"></script>
     <script>
+    function mesgNotice(con) {
+        if (window.Notification && Notification.permission !== "denied") {
+            Notification.requestPermission(function(status) {
+                var notice_ = new Notification('消息', { body:con,icon: '//image.zhangxinxu.com/image/study/s/s128/mm1.jpg'});
+                notice_.onclick = function() { //单击消息提示框，进入浏览器页面
+                    window.focus();
+                }
+            });
+        }
+    }
     const vue = new Vue({
         el: '#app',
         data: {
@@ -172,6 +182,7 @@
                     $.post('https://api.it120.cc/cfce0392be2649cb5375a66472d6a2b6/json/set', setData, function(re) {
                         if (re.code === 0) {
                             weui.toast('成功');
+                            mesgNotice(`用户${data.name}添加成功`)
                             vm.info = {};
                         } else {
                             weui.alert(re.msg);
