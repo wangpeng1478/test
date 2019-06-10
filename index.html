@@ -10,6 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="stylesheet" href="https://cdn.bootcss.com/weui/2.0.0/style/weui.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
     <style>
         body {
         background-color: #ededed;
@@ -122,14 +123,26 @@
             </div>
         </div>
     </div>
+    <div id="gitalk-container"></div>
+    <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
     <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
     <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
     <script src="weui.min.js"></script>
     <script>
+    var gitalk = new Gitalk({
+        clientID: `09c0d172415401ec0cd5`,
+        clientSecret: `30e2f74c949a9b0285067323002647c302363dec`,
+        repo: `test`,
+        owner: 'wangpeng1478',
+        admin: ['wangpeng1478'],
+        id: 'wangpeng1478_test',
+
+    });
+    gitalk.render('gitalk-container');
     function mesgNotice(con) {
         if (window.Notification && Notification.permission !== "denied") {
             Notification.requestPermission(function(status) {
-                var notice_ = new Notification('消息', { body:con,icon: '//image.zhangxinxu.com/image/study/s/s128/mm1.jpg'});
+                var notice_ = new Notification('消息', { body: con, icon: '//image.zhangxinxu.com/image/study/s/s128/mm1.jpg' });
                 notice_.onclick = function() { //单击消息提示框，进入浏览器页面
                     window.focus();
                 }
