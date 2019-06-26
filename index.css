@@ -1,0 +1,12 @@
+ body {
+     background-color: #ededed;
+ }
+
+ @media screen and (min-width: 1024px) {
+     .weui-dialog {
+         left: 50%;
+         margin-left: -17.5%;
+     }
+ }
+
+ 

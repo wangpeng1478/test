@@ -3,250 +3,31 @@
 
 <head>
     <meta charset="utf-8">
-    <title>AI</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>管理</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <link rel="shortcut icon" href="" type="image/x-icon" />
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="stylesheet" href="https://cdn.bootcss.com/weui/2.0.0/style/weui.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-    <style>
-        body {
-        background-color: #ededed;
-    }
-    </style>
+    <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
     <div id="app">
-        <form action="" @submit.prevent="submit">
-            <div class="weui-cells__title">个人信息填写</div>
-            <div class="weui-cells weui-cells_form">
-                <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">姓名</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="info.name" placeholder="用户姓名">
-                    </div>
+        <div class="weui-cells__title">List</div>
+        <div class="weui-cells">
+            <a class="weui-cell weui-cell_access" href="news.html">
+                <div class="weui-cell__bd">
+                    <p>新闻管理</p>
                 </div>
-                <div class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__hd">
-                        <label for="" class="weui-label">性别</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <select class="weui-select" v-model="info.gender">
-                            <option value="男">男</option>
-                            <option value="女">女</option>
-                        </select>
-                    </div>
+                <div class="weui-cell__ft">
                 </div>
-                <div class="weui-cell">
-                    <div class="weui-cell__hd"><label for="" class="weui-label">出生日期</label></div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="date" v-model="info.birthday">
-                    </div>
-                </div>
-                <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">手机号</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="tel" v-model="info.tel" placeholder="用户手机号">
-                    </div>
-                </div>
-                <div class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__hd">
-                        <label for="" class="weui-label">国家/地区</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <select class="weui-select" v-model="info.country">
-                            <option value="中国">中国</option>
-                            <option value="美国">美国</option>
-                            <option value="英国">英国</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="weui-cells__title">备注</div>
-            <div class="weui-cells weui-cells_form">
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <textarea class="weui-textarea" v-model="info.remarks" placeholder="请输入备注" rows="3"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="weui-btn-area">
-                <button class="weui-btn weui-btn_primary" type="submit">{{id===0?'提交':'修改'}}</button>
-            </div>
-        </form>
-        <div class="weui-panel">
-            <div class="weui-panel__hd">用户列表({{infoList.length}}个)</div>
-            <div class="weui-panel__bd">
-                <div class="weui-form-preview" v-for="(e,index) in infoList" :key="index">
-                    <div class="weui-form-preview__hd">
-                        <label class="weui-form-preview__label">用户名</label>
-                        <em class="weui-form-preview__value">{{e.jsonData.name}}</em>
-                    </div>
-                    <div class="weui-form-preview__bd">
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">性别</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.gender}}</span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">出生日期</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.birthday}}</span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">手机号</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.tel}}</span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">国家/地区</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.country}}</span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">添加时间</label>
-                            <span class="weui-form-preview__value">{{e.dateAdd}}</span>
-                        </div>
-                        <div class="weui-form-preview__item" v-if="e.jsonData.remarks">
-                            <label class="weui-form-preview__label">备注</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.remarks}}</span>
-                        </div>
-                    </div>
-                    <div class="weui-form-preview__ft">
-                        <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:" @click="edit(index)">编辑</a>
-                        <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" @click="rem(index)">删除</button>
-                    </div>
-                </div>
-            </div>
+            </a>
         </div>
     </div>
-    <div id="gitalk-container"></div>
-    <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
-    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
-    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
-    <script src="weui.min.js"></script>
-    <script>
-    var gitalk = new Gitalk({
-        clientID: `09c0d172415401ec0cd5`,
-        clientSecret: `30e2f74c949a9b0285067323002647c302363dec`,
-        repo: `test`,
-        owner: 'wangpeng1478',
-        admin: ['wangpeng1478'],
-        id: 'wangpeng1478_test',
-
-    });
-    gitalk.render('gitalk-container');
-    function mesgNotice(con) {
-        if (window.Notification && Notification.permission !== "denied") {
-            Notification.requestPermission(function(status) {
-                var notice_ = new Notification('消息', { body: con, icon: '//image.zhangxinxu.com/image/study/s/s128/mm1.jpg' });
-                notice_.onclick = function() { //单击消息提示框，进入浏览器页面
-                    window.focus();
-                }
-            });
-        }
-    };
-    var vue = new Vue({
-        el: '#app',
-        data: {
-            id: 0,
-            infoList: [],
-            info: {}
-        },
-        methods: {
-            get(type) {
-                var vm = this;
-                var loading = weui.loading('loading');
-                $.post('https://api.it120.cc/cfce0392be2649cb5375a66472d6a2b6/json/list', { type: type }, function(re) {
-                    if (re.code === 0) {
-                        vm.infoList = re.data
-                    } else {
-                        weui.alert(re.msg);
-                    }
-                    loading.hide();
-                });
-            },
-            submit() {
-                var vm = this;
-                var data = this.info;
-                if (!data.name) {
-                    weui.alert('输入姓名');
-                } else if (!data.gender) {
-                    weui.alert('选择性别');
-                } else if (!data.birthday) {
-                    weui.alert('选择出生日期');
-                } else if (!data.tel) {
-                    weui.alert('选择手机号');
-                } else if (!data.country) {
-                    weui.alert('选择国家');
-                } else {
-
-                    var setData = {
-                        content: JSON.stringify(data),
-                        type: 'info'
-                    };
-                    if (vm.id != 0) {
-                        setData.id = vm.id;
-                    }
-                    var loading = weui.loading('提交中');
-                    $.post('https://api.it120.cc/cfce0392be2649cb5375a66472d6a2b6/json/set', setData, function(re) {
-                        if (re.code === 0) {
-                            weui.toast('成功');
-                            mesgNotice(`用户${data.name}添加成功`)
-                            vm.info = {};
-                        } else {
-                            weui.alert(re.msg);
-                        }
-                        vm.id = 0;
-                        vm.get('info')
-                        loading.hide();
-                    });
-                }
-
-            },
-            edit(index) {
-                window.scrollTo(0, 0);
-                this.info = this.infoList[index].jsonData;
-                this.id = this.infoList[index].id;
-            },
-            rem(index) {
-                var vm = this;
-                weui.confirm(`确定删除${vm.infoList[index].jsonData.name}？`, {
-                    title: '警告',
-                    buttons: [{
-                        label: '取消',
-                        type: 'default',
-                        onClick: function() { console.log('no') }
-                    }, {
-                        label: '删除',
-                        type: 'primary',
-                        onClick: function() {
-                            var loading = weui.loading('删除中');
-
-                            $.post('https://api.it120.cc/cfce0392be2649cb5375a66472d6a2b6/json/delete', { id: vm.infoList[index].id }, function(re) {
-                                if (re.code === 0) {
-
-                                    weui.toast('删除成功');
-                                    vm.infoList.splice(index, 1);
-
-                                } else {
-                                    weui.alert(re.msg);
-                                }
-                                loading.hide();
-                            });
-                        }
-                    }]
-                });
-            }
-        },
-        mounted() {
-            this.get('info')
-        },
-    })
-    </script>
+   
 </body>
 
 </html>
