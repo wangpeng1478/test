@@ -29,10 +29,10 @@
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd">
-                        <label class="weui-label">新闻摘要</label>
+                        <label class="weui-label">新闻来源</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="news.abstract" placeholder="输入新闻摘要">
+                        <input class="weui-input" type="text" v-model="news.source" maxlength="6" placeholder="输入新闻来源">
                     </div>
                 </div>
                 <div class="weui-cell">
@@ -44,14 +44,6 @@
                     </div>
                     <div class="weui-cell__ft" v-if="news.url">
                         <img class="weui-vcode-img" :src="news.url" alt="url错误">
-                    </div>
-                </div>
-                <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">新闻标签</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="news.tag" placeholder="新闻标签 |隔开">
                     </div>
                 </div>
                 <div class="weui-cell">
@@ -107,17 +99,14 @@
                                     alt="url错误"></span>
                         </div>
                         <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">新闻摘要</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.abstract}}</span>
+                            <label class="weui-form-preview__label">新闻来源</label>
+                            <span class="weui-form-preview__value">{{e.jsonData.source}}</span>
                         </div>
                         <div class="weui-form-preview__item">
                             <label class="weui-form-preview__label">添加时间</label>
                             <span class="weui-form-preview__value">{{new Date(e.dateAdd).toLocaleString()}}</span>
                         </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">新闻标签</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.tag}}</span>
-                        </div>
+                        
                     </div>
                     <div class="weui-form-preview__ft">
                         <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:"
@@ -165,9 +154,9 @@
                     var data = this.news;
                     if (!data.title) {
                         weui.alert('输入标题');
-                    } else if (!data.tag) {
-                        weui.alert('输入标签');
-                    } else {
+                    } else if (!data.source) {
+                        weui.alert('输入新闻来源');
+                    }else {
                         data.content = UM.getEditor('container').getContent();
                         var setData = {
                             content: JSON.stringify(data),

@@ -16,128 +16,31 @@
 <body>
     <div id="app">
         <form action="" @submit.prevent="submit">
-            <div class="weui-cells__title">发布新闻</div>
-            <div class="weui-cells weui-cells_form">
-                <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">新闻标题</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="news.title" placeholder="输入新闻标题">
-                    </div>
-                </div>
-                <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">新闻摘要</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="news.abstract" placeholder="输入新闻摘要">
-                    </div>
-                </div>
-                <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">新闻图片</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="news.url" placeholder="输入图片URL">
-                    </div>
-                    <div class="weui-cell__ft" v-if="news.url">
-                        <img class="weui-vcode-img" :src="news.url" alt="url错误">
-                    </div>
-                </div>
-                <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">新闻标签</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="news.tag" placeholder="新闻标签 |隔开">
-                    </div>
-                </div>
-                <div class="weui-cell">
-                    <div class="weui-cell__hd"><label class="weui-label">赞</label></div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" v-model="news.zan" pattern="[0-9]*" placeholder="赞">
-                    </div>
-                </div>
-                <div class="weui-cell">
-                    <div class="weui-cell__hd"><label class="weui-label">look</label></div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" v-model="news.look" pattern="[0-9]*" placeholder="look">
-                    </div>
-                </div>
-                <div class="weui-cell">
-                    <div class="weui-cell__hd"><label class="weui-label">序号</label></div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" v-model="news.sort" pattern="[0-9]*"
-                            placeholder="请输入序号">
-                    </div>
-                </div>
-            </div>
             <div class="weui-cells__title">内容</div>
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <script id="container" name="content" type="text/plain"
-                            style="width:100%;height:300px;"></script>
+                        <textarea class="weui-textarea" v-model="bulletin.content" placeholder="请输入公告" maxlength="200" rows="3"></textarea>
+                        <div class="weui-textarea-counter"><span v-text="bulletin.content.length"></span>/200</div>
                     </div>
                 </div>
             </div>
             <div class="weui-btn-area">
-                <button class="weui-btn weui-btn_primary" type="submit">{{id===0?'提交':'修改'}}</button>
+                <button class="weui-btn weui-btn_primary" type="submit">添加公告</button>
             </div>
         </form>
-        <div class="weui-panel">
-            <div class="weui-panel__hd">新闻列表({{infoList.length}}条)</div>
-            <div class="weui-panel__bd">
-                <div class="weui-form-preview" v-for="(e,index) in infoList" :key="index">
-                    <div class="weui-form-preview__bd">
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">信息</label>
-                            <span class="weui-form-preview__value">ID:{{e.id}} zan:{{e.jsonData.zan}}
-                                look:{{e.jsonData.look}}</span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">新闻标题</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.title}} ({{e.jsonData.sort}})</span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">新闻图片</label>
-                            <span class="weui-form-preview__value"><img class="weui-vcode-img" :src="e.jsonData.url"
-                                    alt="url错误"></span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">新闻摘要</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.abstract}}</span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">添加时间</label>
-                            <span class="weui-form-preview__value">{{new Date(e.dateAdd).toLocaleString()}}</span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">新闻标签</label>
-                            <span class="weui-form-preview__value">{{e.jsonData.tag}}</span>
-                        </div>
-                    </div>
-                    <div class="weui-form-preview__ft">
-                        <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:"
-                            @click="edit(index)">编辑</a>
-                        <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary"
-                            @click="rem(index)">删除</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-
+    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
     <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+
     <script src="weui.min.js"></script>
     <script>
         var vue = new Vue({
             el: '#app',
             data: {
-                id: 0,
-                infoList: [],
-                news: {}
+                bulletin: {
+                    content:'',
+                }
             },
             methods: {
                 get(type) {
@@ -146,28 +49,28 @@
                     $.post('https://api.it120.cc/cfce0392be2649cb5375a66472d6a2b6/json/list', {
                         type: type
                     }, function (re) {
-                        if (re.code === 0) {
-                            vm.infoList = re.data
+                        console.log(re)
+                        if (re.code === 0 && re.data.length != 0) {
+                            
+                            vm.id = re.data[0].id;
+                            vm.bulletin.content = re.data[0].jsonData.content;
                         } else {
-                            weui.alert(re.msg);
+                            weui.alert(re.msg||'请添加公告');
                         }
                         loading.hide();
                     });
                 },
                 submit() {
                     var vm = this;
-                    var data = this.news;
-                    if (!data.title) {
-                        weui.alert('输入标题');
-                    } else if (!data.tag) {
-                        weui.alert('输入标签');
+                    var data = this.bulletin;
+                    if (!data.content) {
+                        weui.alert('输入内容');
                     } else {
-                        data.content = UM.getEditor('container').getContent();
                         var setData = {
                             content: JSON.stringify(data),
-                            type: 'news'
+                            type: 'bulletin'
                         };
-                        if (vm.id != 0) {
+                        if(vm.id){
                             setData.id = vm.id;
                         }
                         var loading = weui.loading('提交中');
@@ -175,63 +78,18 @@
                             function (re) {
                                 if (re.code === 0) {
                                     weui.toast('成功');
-                                    vm.news = {};
-                                    UM.getEditor('container').setContent('');
                                 } else {
                                     weui.alert(re.msg);
                                 }
                                 vm.id = 0;
-                                vm.get('news')
                                 loading.hide();
                             });
                     }
 
-                },
-                edit(index) {
-                    window.scrollTo(0, 0);
-                    this.news = this.infoList[index].jsonData;
-                    this.id = this.infoList[index].id;
-                    var content = this.infoList[index].jsonData.content;
-                    if (content) {
-                        UM.getEditor('container').setContent(content);
-                    }
-                },
-                rem(index) {
-                    var vm = this;
-                    weui.confirm(`确定删除${vm.infoList[index].jsonData.name}？`, {
-                        title: '警告',
-                        buttons: [{
-                            label: '取消',
-                            type: 'default',
-                            onClick: function () {
-                                console.log('no')
-                            }
-                        }, {
-                            label: '删除',
-                            type: 'primary',
-                            onClick: function () {
-                                var loading = weui.loading('删除中');
-
-                                $.post('https://api.it120.cc/cfce0392be2649cb5375a66472d6a2b6/json/delete', {
-                                    id: vm.infoList[index].id
-                                }, function (re) {
-                                    if (re.code === 0) {
-
-                                        weui.toast('删除成功');
-                                        vm.infoList.splice(index, 1);
-
-                                    } else {
-                                        weui.alert(re.msg);
-                                    }
-                                    loading.hide();
-                                });
-                            }
-                        }]
-                    });
                 }
             },
             mounted() {
-                this.get('news')
+                this.get('bulletin')
             },
         })
     </script>
