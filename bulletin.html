@@ -3,14 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>新闻管理</title>
+    <title>公告管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <link rel="shortcut icon" href="" type="image/x-icon" />
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="stylesheet" href="https://cdn.bootcss.com/weui/2.0.0/style/weui.min.css">
-    <link rel="stylesheet" href="https://ueditor.baidu.com/umeditor/themes/default/css/umeditor.min.css">
     <link rel="stylesheet" href="index.css">
 </head>
 
@@ -131,11 +130,6 @@
     </div>
 
     <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
-    <script src="https://ueditor.baidu.com/umeditor/third-party/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ueditor.baidu.com/umeditor/third-party/template.min.js"></script>
-    <script type="text/javascript" src="https://ueditor.baidu.com/umeditor/umeditor.config.js"></script>
-    <script type="text/javascript" src="https://ueditor.baidu.com/umeditor/umeditor.js"></script>
-    <script type="text/javascript" src="https://ueditor.baidu.com/umeditor/lang/zh-cn/zh-cn.js"></script>
     <script src="weui.min.js"></script>
     <script>
         var vue = new Vue({
@@ -238,9 +232,6 @@
             },
             mounted() {
                 this.get('news')
-                window.um = UM.getEditor('container', {
-                    // toolbar: ['undo redo | bold italic underline']
-                });
             },
         })
     </script>
