@@ -47,12 +47,6 @@
                     </div>
                 </div>
                 <div class="weui-cell">
-                    <div class="weui-cell__hd"><label class="weui-label">赞</label></div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" v-model="news.zan" pattern="[0-9]*" placeholder="赞">
-                    </div>
-                </div>
-                <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">look</label></div>
                     <div class="weui-cell__bd">
                         <input class="weui-input" type="number" v-model="news.look" pattern="[0-9]*" placeholder="look">
@@ -156,6 +150,14 @@
                         weui.alert('输入标题');
                     } else if (!data.source) {
                         weui.alert('输入新闻来源');
+                    } else if (!data.url) {
+                        weui.alert('输入新闻图片');
+                    }  else if (!data.look) {
+                        weui.alert('输入look');
+                    }  else if (!data.sort) {
+                        weui.alert('输入排序');
+                    } else if (!UM.getEditor('container').getContent()) {
+                        weui.alert('输入新闻内容');
                     }else {
                         data.content = UM.getEditor('container').getContent();
                         var setData = {
@@ -193,7 +195,7 @@
                 },
                 rem(index) {
                     var vm = this;
-                    weui.confirm(`确定删除${vm.infoList[index].jsonData.name}？`, {
+                    weui.confirm(`确定删除【${vm.infoList[index].jsonData.title}】？`, {
                         title: '警告',
                         buttons: [{
                             label: '取消',
