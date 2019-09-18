@@ -18,5 +18,16 @@ body {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0.3;
+}
+.tokenInput {
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  width: 100%;
+  resize: none;
+  display: block;
+  color: #323233;
+  border: 1px solid #a9a9a9;
+  box-sizing: border-box;
+  background-color: transparent;
 }

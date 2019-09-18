@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>cosplay</title>
+    <title>cosplay分类管理</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <link rel="shortcut icon" href="" type="image/x-icon" />
@@ -20,79 +20,21 @@
         <a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_primary" @click="showToken">showToken</a>
         <form action="" @submit.prevent="submit">
             <div class="weui-cells weui-cells_form">
-                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell">
                     <div class="weui-cell__hd">
-                        <label for="" class="weui-label">文章分类</label>
+                        <label class="weui-label">名称</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <select class="weui-select" v-model="form.categoryId" @change="queryinfo">
-                            <option v-for="(item,index) in categorylist" :key="index" :value="item.id">{{item.name}}
-                            </option>
-                        </select>
+                        <input class="weui-input" type="text" v-model="form.name" placeholder="输入名称">
                     </div>
                 </div>
                 <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">标题</label>
-                    </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="form.title" placeholder="输入标题">
+                        <textarea class="weui-textarea" placeholder="头像" rows="4" v-model="form.icon"></textarea>
                     </div>
                 </div>
-
-                <div class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__hd">
-                        <label for="" class="weui-label">类型</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <select class="weui-select" v-model="form.keywords">
-                            <option value="img">img</option>
-                            <option value="video">video</option>
-                        </select>
-                    </div>
-                </div>
-                <div v-if="form.keywords=='img'">
-                    <div class="weui-cell">
-                        <div class="weui-cell__bd">
-                            <textarea class="weui-textarea" placeholder="图片1" rows="4" v-model="form.tags"></textarea>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__bd">
-                            <textarea class="weui-textarea" placeholder="图片2" rows="4"
-                                v-model="form.descript"></textarea>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__bd">
-                            <textarea class="weui-textarea" placeholder="图片3" rows="4" v-model="form.income"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="form.keywords=='video'">
-                    <div class="weui-cell">
-                        <div class="weui-cell__bd">
-                            <textarea class="weui-textarea" placeholder="封面" rows="4" v-model="form.tags"></textarea>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__bd">
-                            <textarea class="weui-textarea" placeholder="视频" rows="4"
-                                v-model="form.descript"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="form.keywords=='img'">
-                    <a v-for="item1s in splits(form.tags)" :key="item1s" class="imgview" :href="item1s"
-                        target="_blank"><img width="50" :src="item1s" alt=""></a>
-                    <a v-for="item2s in splits(form.descript)" :key="item2s" class="imgview" :href="item2s"
-                        target="_blank"><img width="50" :src="item2s" alt=""></a>
-                    <a v-for="item3s in splits(form.income)" :key="item3s" class="imgview" :href="item3s"
-                        target="_blank"><img width="50" :src="item3s" alt=""></a>
-                </div>
-                <div v-if="form.keywords=='video'">
-                    <a class="imgview" :href="form.descript" target="_blank"><img height="100" :src="form.tags"
-                            alt=""></a>
+                <div v-if="form.icon">
+                    <a class="imgview" :href="form.icon" target="_blank"><img height="100" :src="form.icon" alt=""></a>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd">
@@ -109,39 +51,20 @@
         </form>
 
         <div class="weui-panel">
-            <div class="weui-panel__hd">({{newsList.length}})</div>
+            <div class="weui-panel__hd">({{categorylist.length}})</div>
             <div class="weui-panel__bd">
-                <div class="weui-form-preview" v-for="(e,index) in newsList" :key="index">
+                <div class="weui-form-preview" v-for="(e,index) in categorylist" :key="index">
                     <div class="weui-form-preview__bd">
                         <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label" v-if="e.status==1" style="color:#f00">标题</label>
-                            <label class="weui-form-preview__label" v-else>标题</label>
-                            <span class="weui-form-preview__value">【{{e.paixu}}】- {{e.title}}</span>
+                            <label class="weui-form-preview__label">名称</label>
+                            <span class="weui-form-preview__value">{{e.name}}</span>
                         </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">名字</label>
-                            <span class="weui-form-preview__value">{{e.author}}</span>
-                        </div>
+                    </div>
+                    <div class="weui-form-preview__bd">
                         <div class="weui-form-preview__item">
                             <label class="weui-form-preview__label">头像</label>
                             <span class="weui-form-preview__value">
-                                <a class="imgview" :href="e.pic" target="_blank"><img width="50" :src="e.pic"
-                                        alt=""></a>
-                            </span>
-                        </div>
-                        <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">{{e.keywords}}</label>
-                            <span class="weui-form-preview__value" v-if="e.keywords=='img'">
-                                <a v-for="item1 in splits(e.tags)" :key="item1" class="imgview" :href="item1"
-                                    target="_blank"><img width="50" :src="item1" alt=""></a>
-                                <a v-for="item2 in splits(e.descript)" :key="item2" class="imgview" :href="item2"
-                                    target="_blank"><img width="50" :src="item2" alt=""></a>
-                                <a v-for="item3 in splits(e.income)" :key="item3" class="imgview" :href="item3"
-                                    target="_blank"><img width="50" :src="item3" alt=""></a>
-                            </span>
-                            <span class="weui-form-preview__value" v-if="e.keywords=='video'">
-                                <a class="imgview" :href="e.descript" target="_blank"><img height="100" :src="e.tags"
-                                        alt=""></a>
+                                <a class="imgview" :href="e.icon" target="_blank"><img height="100" :src="e.icon"></a>
                             </span>
                         </div>
                     </div>
@@ -164,14 +87,17 @@
             el: '#app',
             data: {
                 categorylist: [],
-                newsList: [],
                 token: window.localStorage.getItem("token") || '',
                 loading: null,
                 form: {
+                    dialogTitle: '增加分类',
+                    dialogFormVisible: true,
+                    name: '',
+                    icon: '',
                     pid: 0,
-                    content: new Date().getTime(),
+                    isUse: true,
                     paixu: 0,
-                    keywords: 'img'
+                    extJsonStr: {}
                 }
             },
             methods: {
@@ -190,13 +116,12 @@
                         if (array[index].id == id) {
                             vm.form.pic = array[index].icon;
                             vm.form.author = array[index].name;
-                            console.log(array[index])
                             break;
                         }
 
                     }
                 },
-                getnews() {
+                getCategory() {
                     var vm = this;
                     var data = {
                         page: 1,
@@ -205,19 +130,13 @@
                     vm.loading = weui.loading('loading');
                     $.ajax({
                         type: "post",
-                        url: "https://user.api.it120.cc/user/apiExtNews/list",
+                        url: "https://user.api.it120.cc/user/apiExtNewsCategory/list",
                         headers: { 'X-Token': vm.token },
                         data: data,
                         dataType: "json",
                         success: function (res) {
-                            var categorylist = [];
                             if (res.code === 0) {
-                                vm.newsList = res.data.result;
-                                var arr = res.data.categoryMap;
-                                for (i in arr) {
-                                    categorylist.push(arr[i]);
-                                }
-                                vm.categorylist = categorylist;
+                                vm.categorylist = res.data;
                             } else {
                                 weui.alert(res.msg);
                             }
@@ -228,29 +147,25 @@
                 submit() {
                     var vm = this;
                     var data = this.form;
-                    if (!data.categoryId || !data.descript || !data.title) {
+                    if (!data.icon || !data.name) {
                         weui.alert('填写必要信息');
                         return;
                     };
                     vm.loading = weui.loading('提交中');
                     $.ajax({
                         type: "post",
-                        url: "https://user.api.it120.cc/user/apiExtNews/save",
+                        url: "https://user.api.it120.cc/user/apiExtNewsCategory/save",
                         headers: { 'X-Token': vm.token },
                         data: data,
                         dataType: "json",
                         success: function (response) {
+                            vm.loading.hide();
                             if (response.code == 0) {
-                                vm.loading.hide();
                                 weui.alert('成功', function () {
-                                    vm.form = {
-                                        pid: 0,
-                                        content: new Date().getTime(),
-                                        paixu: 0,
-                                        keywords: 'img'
-                                    };
-                                    vm.getnews();
+                                    location.reload();
                                 });
+                            } else {
+                                weui.alert(response.msg);
                             }
                         }
                     });
@@ -259,8 +174,7 @@
                 },
                 edit(index) {
                     window.scrollTo(0, 0);
-                    this.form = this.newsList[index];
-                    this.queryinfo();
+                    this.form = this.categorylist[index];
                 },
                 rem(index) {
                     var vm = this;
@@ -279,9 +193,9 @@
                                 var loading = weui.loading('删除中');
                                 $.ajax({
                                     type: "post",
-                                    url: "https://user.api.it120.cc/user/apiExtNews/del",
+                                    url: "https://user.api.it120.cc/user/apiExtNewsCategory/del",
                                     headers: { 'X-Token': vm.token },
-                                    data: { id: vm.newsList[index].id },
+                                    data: { id: vm.categorylist[index].id },
                                     dataType: "json",
                                     success: function (response) {
                                         loading.hide();
@@ -310,12 +224,13 @@
                         window.localStorage.setItem("token", token);
                         weuiAlert.hide();
                         window.location.reload();
+
                     });
                 },
             },
             mounted() {
                 if (this.token) {
-                    this.getnews();
+                    this.getCategory();
                 } else {
                     this.showToken();
                 };
