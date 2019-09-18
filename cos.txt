@@ -1,0 +1,3 @@
+https://admin.it120.cc/
+
+browser-sync start --server --files "**/*.css, **/*.html"
