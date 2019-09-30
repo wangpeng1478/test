@@ -17,7 +17,7 @@
 <body>
     <div id="app">
         <br />
-        <a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_primary" @click="showToken">showToken</a>
+        <!-- <a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_primary" @click="showToken">showToken</a> -->
         <form action="" @submit.prevent="submit">
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell weui-cell_select weui-cell_select-after">
@@ -31,12 +31,24 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="weui-cell">
                     <div class="weui-cell__hd">
-                        <label class="weui-label">标题</label>
+                        <label class="weui-label">头像</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="form.title" placeholder="输入标题">
+                        <input class="weui-input" v-model="form.pic" placeholder="头像" type="text">
+                    </div>
+                    <div class="weui-cell__ft" v-if="form.pic">
+                        <img height="27" style="outline: 1px solid #eee;" :src="form.pic" />
+                    </div>
+                </div>
+                <div class="weui-cell" style="align-items: unset;">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">内容</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <textarea class="weui-textarea" v-model="form.title" placeholder="输入内容" rows="4"></textarea>
                     </div>
                 </div>
 
@@ -54,13 +66,13 @@
                 <div v-if="form.keywords=='img'">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
-                            <textarea class="weui-textarea" placeholder="图片1" rows="4" v-model="form.tags"></textarea>
+                            <textarea class="weui-textarea" placeholder="图片1" rows="4"
+                                v-model="form.descript"></textarea>
                         </div>
                     </div>
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
-                            <textarea class="weui-textarea" placeholder="图片2" rows="4"
-                                v-model="form.descript"></textarea>
+                            <textarea class="weui-textarea" placeholder="图片2" rows="4" v-model="form.tags"></textarea>
                         </div>
                     </div>
                     <div class="weui-cell">
@@ -99,7 +111,25 @@
                         <label class="weui-label">排序</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" v-model="form.paixu" pattern="[0-9]*" placeholder="排序">
+                        <input class="weui-input" type="text" v-model="form.paixu" placeholder="排序">
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">推荐</div>
+                    <div class="weui-cell__ft">
+                        <input class="weui-switch" type="checkbox" v-model="form.isRecommend">
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">状态</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" v-model="form.status">
+                            <option value="2">审核通过</option>
+                            <option value="0">待审核</option>
+                            <option value="1">审核不通过</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -113,6 +143,8 @@
             <div class="weui-panel__bd">
                 <div class="weui-form-preview" v-for="(e,index) in newsList" :key="index">
                     <div class="weui-form-preview__bd">
+
+
                         <div class="weui-form-preview__item">
                             <label class="weui-form-preview__label" v-if="e.status==1" style="color:#f00">标题</label>
                             <label class="weui-form-preview__label" v-else>标题</label>
@@ -122,10 +154,10 @@
                             <label class="weui-form-preview__label">名字</label>
                             <span class="weui-form-preview__value">{{e.author}}</span>
                         </div>
-                        <div class="weui-form-preview__item">
+                        <div class="weui-form-preview__item" style="align-items: unset;">
                             <label class="weui-form-preview__label">头像</label>
                             <span class="weui-form-preview__value">
-                                <a class="imgview" :href="e.pic" target="_blank"><img width="50" :src="e.pic"
+                                <a class="imgview" :href="e.pic" target="_blank"><img width="50" v-lazy="e.pic"
                                         alt=""></a>
                             </span>
                         </div>
@@ -133,17 +165,25 @@
                             <label class="weui-form-preview__label">{{e.keywords}}</label>
                             <span class="weui-form-preview__value" v-if="e.keywords=='img'">
                                 <a v-for="item1 in splits(e.tags)" :key="item1" class="imgview" :href="item1"
-                                    target="_blank"><img width="50" :src="item1" alt=""></a>
+                                    target="_blank"><img width="50" v-lazy="item1" alt=""></a>
                                 <a v-for="item2 in splits(e.descript)" :key="item2" class="imgview" :href="item2"
-                                    target="_blank"><img width="50" :src="item2" alt=""></a>
+                                    target="_blank"><img width="50" v-lazy="item2" alt=""></a>
                                 <a v-for="item3 in splits(e.income)" :key="item3" class="imgview" :href="item3"
-                                    target="_blank"><img width="50" :src="item3" alt=""></a>
+                                    target="_blank"><img width="50" v-lazy="item3" alt=""></a>
                             </span>
                             <span class="weui-form-preview__value" v-if="e.keywords=='video'">
-                                <a class="imgview" :href="e.descript" target="_blank"><img height="100" :src="e.tags"
+                                <a class="imgview" :href="e.descript" target="_blank"><img height="100" v-lazy="e.tags"
                                         alt=""></a>
                             </span>
                         </div>
+                        <div class="weui-form-preview__item">
+                            <label class="weui-form-preview__label">推荐</label>
+                            <span class="weui-form-preview__value">{{e.isRecommend}}</span>
+                        </div>
+                        <div class="weui-form-preview__item">
+                                <label class="weui-form-preview__label">状态</label>
+                                <span class="weui-form-preview__value">{{e.statusStr}}[{{e.status}}]</span>
+                            </div>
                     </div>
                     <div class="weui-form-preview__ft">
                         <button class="weui-form-preview__btn weui-form-preview__btn_default"
@@ -157,17 +197,24 @@
 
     </div>
     <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue-lazyload/1.3.2/vue-lazyload.js"></script>
     <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
     <script src="weui.min.js"></script>
     <script>
+        Vue.use(VueLazyload, {
+            attempt:'1',
+            loading:'https://cosplay-1254176432.cos.ap-shanghai.myqcloud.com/img/load.jpg',
+            error:'https://cosplay-1254176432.cos.ap-shanghai.myqcloud.com/img/errload.jpg'
+        });
         var vue = new Vue({
             el: '#app',
             data: {
                 categorylist: [],
                 newsList: [],
-                token: window.localStorage.getItem("token") || '',
                 loading: null,
                 form: {
+                    status:2,
+                    isRecommend: false,
                     pid: 0,
                     content: new Date().getTime(),
                     paixu: 0,
@@ -175,6 +222,22 @@
                 }
             },
             methods: {
+                checkToken() {
+                    var vm = this;
+                    $.ajax({
+                        type: "get",
+                        url: "https://user.api.it120.cc/user/checkToken",
+                        headers: { 'X-Token': localStorage.getItem("Token") || '' },
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.code == 0) {
+                                vm.getnews();
+                            } else {
+                                location.href = "/";
+                            }
+                        }
+                    });
+                },
                 splits(e) {
                     var arr = [];
                     if (e) {
@@ -205,23 +268,34 @@
                     vm.loading = weui.loading('loading');
                     $.ajax({
                         type: "post",
-                        url: "https://user.api.it120.cc/user/apiExtNews/list",
-                        headers: { 'X-Token': vm.token },
+                        url: "https://user.api.it120.cc/user/apiExtNewsCategory/list",
+                        headers: { 'X-Token': localStorage.getItem("Token") || '' },
                         data: data,
                         dataType: "json",
                         success: function (res) {
-                            var categorylist = [];
+                            console.log(res)
                             if (res.code === 0) {
-                                vm.newsList = res.data.result;
-                                var arr = res.data.categoryMap;
-                                for (i in arr) {
-                                    categorylist.push(arr[i]);
-                                }
-                                vm.categorylist = categorylist;
+                                vm.categorylist = res.data;
+                                $.ajax({
+                                    type: "post",
+                                    data: data,
+                                    url: "https://user.api.it120.cc/user/apiExtNews/list",
+                                    headers: { 'X-Token': localStorage.getItem("Token") || '' },
+                                    dataType: "json",
+                                    success: function (rest) {
+                                        console.log(rest)
+                                        if (rest.code === 0) {
+                                            vm.newsList = rest.data.result;
+                                        } else {
+                                            weui.topTips(rest.msg);
+                                        }
+                                        vm.loading.hide();
+                                    }
+                                });
                             } else {
-                                weui.alert(res.msg);
+                                weui.topTips(res.msg);
                             }
-                            vm.loading.hide();
+
                         }
                     });
                 },
@@ -229,28 +303,24 @@
                     var vm = this;
                     var data = this.form;
                     if (!data.categoryId || !data.descript || !data.title) {
-                        weui.alert('填写必要信息');
+                        weui.topTips('填写必要信息');
                         return;
                     };
                     vm.loading = weui.loading('提交中');
                     $.ajax({
                         type: "post",
                         url: "https://user.api.it120.cc/user/apiExtNews/save",
-                        headers: { 'X-Token': vm.token },
+                        headers: { 'X-Token': localStorage.getItem("Token") || '' },
                         data: data,
                         dataType: "json",
                         success: function (response) {
+                            vm.loading.hide();
                             if (response.code == 0) {
-                                vm.loading.hide();
                                 weui.alert('成功', function () {
-                                    vm.form = {
-                                        pid: 0,
-                                        content: new Date().getTime(),
-                                        paixu: 0,
-                                        keywords: 'img'
-                                    };
-                                    vm.getnews();
+                                    location.reload();
                                 });
+                            } else {
+                                weui.topTips(response.msg);
                             }
                         }
                     });
@@ -276,50 +346,31 @@
                             label: '删除',
                             type: 'primary',
                             onClick: function () {
-                                var loading = weui.loading('删除中');
+                                vm.loading = weui.loading('删除中');
                                 $.ajax({
                                     type: "post",
                                     url: "https://user.api.it120.cc/user/apiExtNews/del",
-                                    headers: { 'X-Token': vm.token },
+                                    headers: { 'X-Token': localStorage.getItem("Token") || '' },
                                     data: { id: vm.newsList[index].id },
                                     dataType: "json",
                                     success: function (response) {
-                                        loading.hide();
+                                        vm.loading.hide();
                                         if (response.code == 0) {
                                             weui.toast('删除成功', function () {
                                                 location.reload();
                                             });
                                         } else {
-                                            alert(response.msg);
+                                            weui.topTips(response.msg);
                                         }
                                     }
                                 });
                             }
                         }]
                     });
-                },
-                showToken() {
-                    var vm = this;
-                    var token = this.token;
-                    var tokenInput = `<textarea rows="3" placeholder="输入标题" class="tokenInput">${token}</textarea>`;
-                    var weuiAlert = weui.alert(tokenInput, function () {
-                        var token = document.querySelector(".tokenInput").value;
-                        if (!token) {
-                            return;
-                        };
-                        window.localStorage.setItem("token", token);
-                        weuiAlert.hide();
-                        window.location.reload();
-                    });
-                },
+                }
             },
             mounted() {
-                if (this.token) {
-                    this.getnews();
-                } else {
-                    this.showToken();
-                };
-
+                this.checkToken();
             },
         })
     </script>

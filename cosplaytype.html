@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>cosplay分类管理</title>
+    <title>cosplay标签管理</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <link rel="shortcut icon" href="" type="image/x-icon" />
@@ -17,56 +17,69 @@
 <body>
     <div id="app">
         <br />
-        <a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_primary" @click="showToken">showToken</a>
         <form action="" @submit.prevent="submit">
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__hd">
-                        <label class="weui-label">名称</label>
+                        <label class="weui-label">名字</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" v-model="form.name" placeholder="输入名称">
+                        <input class="weui-input" type="text" v-model="form.name" pattern="[0-9]*" placeholder="名字">
                     </div>
                 </div>
                 <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <textarea class="weui-textarea" placeholder="头像" rows="4" v-model="form.icon"></textarea>
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">头像</label>
                     </div>
-                </div>
-                <div v-if="form.icon">
-                    <a class="imgview" :href="form.icon" target="_blank"><img height="100" :src="form.icon" alt=""></a>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" v-model="form.icon" placeholder="头像" type="text">
+                    </div>
+                    <div class="weui-cell__ft" v-if="form.icon">
+                        <img height="27" style="outline: 1px solid #eee;" :src="form.icon" />
+                    </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd">
                         <label class="weui-label">排序</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" v-model="form.paixu" pattern="[0-9]*" placeholder="排序">
+                        <input class="weui-input" type="text" v-model="form.paixu" placeholder="排序">
                     </div>
                 </div>
+                <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">启用</div>
+                    <div class="weui-cell__ft">
+                        <input class="weui-switch" type="checkbox" v-model="form.isUse">
+                    </div>
+                </div>
+
             </div>
             <div class="weui-btn-area">
                 <button class="weui-btn weui-btn_primary" type="submit">{{form.id?'修改':'添加'}}</button>
             </div>
         </form>
-
         <div class="weui-panel">
             <div class="weui-panel__hd">({{categorylist.length}})</div>
             <div class="weui-panel__bd">
                 <div class="weui-form-preview" v-for="(e,index) in categorylist" :key="index">
                     <div class="weui-form-preview__bd">
                         <div class="weui-form-preview__item">
-                            <label class="weui-form-preview__label">名称</label>
+                            <label class="weui-form-preview__label">标题</label>
                             <span class="weui-form-preview__value">{{e.name}}</span>
                         </div>
-                    </div>
-                    <div class="weui-form-preview__bd">
-                        <div class="weui-form-preview__item">
+                        <div class="weui-form-preview__item" style="align-items: unset;">
                             <label class="weui-form-preview__label">头像</label>
                             <span class="weui-form-preview__value">
-                                <a class="imgview" :href="e.icon" target="_blank"><img height="100" :src="e.icon"></a>
+                                <a class="imgview" :href="e.icon" target="_blank"><img width="50" v-lazy="e.icon"
+                                        alt=""></a>
                             </span>
                         </div>
+
+                        <div class="weui-form-preview__item">
+                            <label class="weui-form-preview__label">启用</label>
+                            <span class="weui-form-preview__value">{{e.isUse}}</span>
+                        </div>
+
                     </div>
                     <div class="weui-form-preview__ft">
                         <button class="weui-form-preview__btn weui-form-preview__btn_default"
@@ -80,48 +93,43 @@
 
     </div>
     <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue-lazyload/1.3.2/vue-lazyload.js"></script>
     <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
     <script src="weui.min.js"></script>
     <script>
+        Vue.use(VueLazyload, {
+            attempt: '1',
+            loading: 'https://cosplay-1254176432.cos.ap-shanghai.myqcloud.com/img/load.jpg',
+            error: 'https://cosplay-1254176432.cos.ap-shanghai.myqcloud.com/img/errload.jpg'
+        });
         var vue = new Vue({
             el: '#app',
             data: {
                 categorylist: [],
-                token: window.localStorage.getItem("token") || '',
                 loading: null,
                 form: {
-                    dialogTitle: '增加分类',
-                    dialogFormVisible: true,
-                    name: '',
-                    icon: '',
-                    pid: 0,
-                    isUse: true,
                     paixu: 0,
-                    extJsonStr: {}
+                    isUse: true,
                 }
             },
             methods: {
-                splits(e) {
-                    var arr = [];
-                    if (e) {
-                        arr = e.split('|') || []
-                    }
-                    return arr;
-                },
-                queryinfo() {
+                checkToken() {
                     var vm = this;
-                    var id = vm.form.categoryId;
-                    var array = vm.categorylist || [];
-                    for (let index = 0; index < array.length; index++) {
-                        if (array[index].id == id) {
-                            vm.form.pic = array[index].icon;
-                            vm.form.author = array[index].name;
-                            break;
+                    $.ajax({
+                        type: "get",
+                        url: "https://user.api.it120.cc/user/checkToken",
+                        headers: { 'X-Token': localStorage.getItem("Token") || '' },
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.code == 0) {
+                                vm.getnews();
+                            } else {
+                                location.href = "/";
+                            }
                         }
-
-                    }
+                    });
                 },
-                getCategory() {
+                getnews() {
                     var vm = this;
                     var data = {
                         page: 1,
@@ -131,31 +139,33 @@
                     $.ajax({
                         type: "post",
                         url: "https://user.api.it120.cc/user/apiExtNewsCategory/list",
-                        headers: { 'X-Token': vm.token },
+                        headers: { 'X-Token': localStorage.getItem("Token") || '' },
                         data: data,
                         dataType: "json",
                         success: function (res) {
+                            console.log(res)
                             if (res.code === 0) {
                                 vm.categorylist = res.data;
+                                vm.loading.hide();
                             } else {
                                 weui.alert(res.msg);
                             }
-                            vm.loading.hide();
+
                         }
                     });
                 },
                 submit() {
                     var vm = this;
                     var data = this.form;
-                    if (!data.icon || !data.name) {
-                        weui.alert('填写必要信息');
+                    if (!data.name || !data.icon) {
+                        weui.topTips('填写必要信息');
                         return;
                     };
                     vm.loading = weui.loading('提交中');
                     $.ajax({
                         type: "post",
                         url: "https://user.api.it120.cc/user/apiExtNewsCategory/save",
-                        headers: { 'X-Token': vm.token },
+                        headers: { 'X-Token': localStorage.getItem("Token") || '' },
                         data: data,
                         dataType: "json",
                         success: function (response) {
@@ -165,7 +175,7 @@
                                     location.reload();
                                 });
                             } else {
-                                weui.alert(response.msg);
+                                alert(response.msg);
                             }
                         }
                     });
@@ -190,51 +200,31 @@
                             label: '删除',
                             type: 'primary',
                             onClick: function () {
-                                var loading = weui.loading('删除中');
+                                vm.loading = weui.loading('删除中');
                                 $.ajax({
                                     type: "post",
                                     url: "https://user.api.it120.cc/user/apiExtNewsCategory/del",
-                                    headers: { 'X-Token': vm.token },
+                                    headers: { 'X-Token': localStorage.getItem("Token") || '' },
                                     data: { id: vm.categorylist[index].id },
                                     dataType: "json",
                                     success: function (response) {
-                                        loading.hide();
+                                        vm.loading.hide();
                                         if (response.code == 0) {
                                             weui.toast('删除成功', function () {
                                                 location.reload();
                                             });
                                         } else {
-                                            alert(response.msg);
+                                            weui.alert(response.msg);
                                         }
                                     }
                                 });
                             }
                         }]
                     });
-                },
-                showToken() {
-                    var vm = this;
-                    var token = this.token;
-                    var tokenInput = `<textarea rows="3" placeholder="输入标题" class="tokenInput">${token}</textarea>`;
-                    var weuiAlert = weui.alert(tokenInput, function () {
-                        var token = document.querySelector(".tokenInput").value;
-                        if (!token) {
-                            return;
-                        };
-                        window.localStorage.setItem("token", token);
-                        weuiAlert.hide();
-                        window.location.reload();
-
-                    });
-                },
+                }
             },
             mounted() {
-                if (this.token) {
-                    this.getCategory();
-                } else {
-                    this.showToken();
-                };
-
+                this.checkToken();
             },
         })
     </script>
