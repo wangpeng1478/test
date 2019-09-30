@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <title>cosplay标签管理</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="" type="image/x-icon" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/2.0.0/style/weui.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div id="app">
+        <br />
+        <form action="" @submit.prevent="submit">
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">分类</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" v-model="type" @change="querytype">
+                            <option value="0">请选择</option>
+                            <option value="gaokao">gaokao</option>
+                            <option value="cosplay">cosplay</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="weui-cell" style="align-items: unset;">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">内容</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <textarea class="weui-textarea" v-model="form.title" placeholder="输入内容" rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area">
+                <button :disabled="type==0" class="weui-btn weui-btn_primary" type="submit">提交</button>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script src="weui.min.js"></script>
+    <script>
+        var vue = new Vue({
+            el: '#app',
+            data: {
+                loading: null,
+                type: '0',
+                form: {}
+            },
+            methods: {
+                checkToken() {
+                    var vm = this;
+                    $.ajax({
+                        type: "get",
+                        url: "https://user.api.it120.cc/user/checkToken",
+                        headers: { 'X-Token': localStorage.getItem("Token") || '' },
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.code == 0) {
+
+                            } else {
+                                location.href = "/";
+                            }
+                        }
+                    });
+                },
+                querytype() {
+                    var type = this.type;
+                    if (type == "0") {
+                        this.form = {};
+                    } else {
+                        this.getNotice(type);
+                    }
+
+                },
+                getNotice(type) {
+                    var vm = this;
+                    var data = {
+                        page: 1,
+                        pageSize: 10000,
+                        type: type,
+                    };
+                    vm.loading = weui.loading('loading');
+                    $.ajax({
+                        type: "post",
+                        url: "https://user.api.it120.cc/user/apiExtNotice/list",
+                        headers: { 'X-Token': localStorage.getItem("Token") || '' },
+                        data: data,
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res)
+                            if (res.code === 0) {
+                                vm.form =  res.data.result[0];
+                                vm.loading.hide();
+                            } else {
+                                weui.topTips(res.msg);
+                            }
+
+                        }
+                    });
+                },
+                submit() {
+                    var vm = this;
+                    var data = this.form;
+                    if (!data.title) {
+                        weui.topTips('填写必要信息');
+                        return;
+                    };
+                    vm.loading = weui.loading('提交中');
+                    $.ajax({
+                        type: "post",
+                        url: "https://user.api.it120.cc/user/apiExtNotice/save",
+                        headers: { 'X-Token': localStorage.getItem("Token") || '' },
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+                            vm.loading.hide();
+                            if (response.code == 0) {
+                                weui.alert('成功', function () {
+                                    location.reload();
+                                });
+                            } else {
+                                weui.topTips(response.msg);
+                            }
+                        }
+                    });
+
+
+                }
+            },
+            mounted() {
+                this.checkToken();
+            },
+        })
+    </script>
+</body>
+
+</html>

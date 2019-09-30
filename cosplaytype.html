@@ -148,7 +148,7 @@
                                 vm.categorylist = res.data;
                                 vm.loading.hide();
                             } else {
-                                weui.alert(res.msg);
+                                weui.topTips(res.msg);
                             }
 
                         }
@@ -175,7 +175,7 @@
                                     location.reload();
                                 });
                             } else {
-                                alert(response.msg);
+                                weui.topTips(response.msg);
                             }
                         }
                     });
@@ -210,11 +210,11 @@
                                     success: function (response) {
                                         vm.loading.hide();
                                         if (response.code == 0) {
-                                            weui.toast('删除成功', function () {
+                                            weui.alert('删除成功', function () {
                                                 location.reload();
                                             });
                                         } else {
-                                            weui.alert(response.msg);
+                                            weui.topTips(response.msg);
                                         }
                                     }
                                 });

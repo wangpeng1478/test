@@ -61,8 +61,15 @@
                 </div>
             </form>
         </div>
-
         <div class="weui-cells" v-if="checkLogin">
+            <a class="weui-cell weui-cell_access" href="notice.html">
+                <div class="weui-cell__bd">
+                    <p>公告管理</p>
+                </div>
+                <div class="weui-cell__ft">
+                </div>
+            </a>
+
             <a class="weui-cell weui-cell_access" href="cosplayType.html">
                 <div class="weui-cell__bd">
                     <p>cosplay标签管理</p>
@@ -141,7 +148,7 @@
                         success: function (response) {
                             vm.loading.hide();
                             if (response.code == 0) {
-                                weui.toast('登录成功', function () {
+                                weui.alert('登录成功', function () {
                                     localStorage.setItem("Token", response.data);
                                     location.reload();
                                 });
