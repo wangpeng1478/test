@@ -39,6 +39,12 @@
                         <textarea class="weui-textarea" v-model="form.title" placeholder="输入内容" rows="4"></textarea>
                     </div>
                 </div>
+                <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">展示</div>
+                    <div class="weui-cell__ft">
+                        <input :disabled="type==0" class="weui-switch" type="checkbox" v-model="form.isShow">
+                    </div>
+                </div>
             </div>
             <div class="weui-btn-area">
                 <button :disabled="type==0" class="weui-btn weui-btn_primary" type="submit">提交</button>
@@ -54,7 +60,9 @@
             data: {
                 loading: null,
                 type: '0',
-                form: {}
+                form: {
+                    isShow:true
+                }
             },
             methods: {
                 checkToken() {
@@ -76,7 +84,7 @@
                 querytype() {
                     var type = this.type;
                     if (type == "0") {
-                        this.form = {};
+                        this.form = {isShow:true};
                     } else {
                         this.getNotice(type);
                     }
