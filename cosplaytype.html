@@ -144,9 +144,9 @@
                         dataType: "json",
                         success: function (res) {
                             console.log(res)
+                            vm.loading.hide();
                             if (res.code === 0) {
                                 vm.categorylist = res.data;
-                                vm.loading.hide();
                             } else {
                                 weui.topTips(res.msg);
                             }
