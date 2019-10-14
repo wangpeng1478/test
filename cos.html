@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <title>上传</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="" type="image/x-icon" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/2.0.0/style/weui.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="weui-cells weui-cells_form" v-show="SecretKey" style="display:none;">
+            <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd">
+                    <label for="" class="weui-label">空间名称</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <select class="weui-select" v-model="Bucket" disabled>
+                        <option value="cosplay-1254176432">cosplay-1254176432</option>
+                    </select>
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd">
+                    <label for="" class="weui-label">所属地域</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <select class="weui-select" v-model="Region" disabled>
+                        <option value="ap-shanghai">ap-shanghai（上海）</option>
+                    </select>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">SecretKey</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" v-model="SecretKey" disabled />
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd">
+                    <label for="" class="weui-label">选择路径</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <select class="weui-select" v-model="path">
+                        <option value="img">img</option>
+                        <option value="poster">poster</option>
+                        <option value="video">video</option>
+                    </select>
+                </div>
+            </div>
+            <div class="weui-btn-area">
+                <label class="weui-btn weui-btn_primary" for="file-selector">上传</label>
+            </div>
+        </div>
+
+        <input id="file-selector" type="file" @change="fileChang" style="display:none;" />
+        <!-- <input id="file-selector" type="file"/> -->
+    </div>
+    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script src="weui.min.js"></script>
+    <script src="cos-js-sdk-v5.js"></script>
+    <script>
+        var vue = new Vue({
+            el: '#app',
+            data: {
+                path: 'img',
+                Bucket: 'cosplay-1254176432',
+                Region: 'ap-shanghai',
+                SecretId: 'AKIDZx60f4A2cz83nLlkcHiusc9SXNzOmXEj',
+                SecretKey: localStorage.getItem("SecretKey") || null,
+                Key: new Date().toISOString().split('T')[0],
+                cos: null,
+                imgfilelist: [], //img
+                posterfilelist: [], //poster
+                videofilelist: [], //video
+            },
+            methods: {
+                fileChang() {
+                    const file = document.getElementById('file-selector').files[0];
+                    this.putObject(file);
+                },
+                putObject(file) {
+                    const vm = this;
+                    vm.cos.putObject({
+                        Bucket: vm.Bucket,
+                        Region: vm.Region,
+                        Key: `${vm.path}/${vm.Key}/${file.name}`,
+                        Body: file,
+                    }, function (err, data) {
+                        document.getElementById('file-selector').value = "";
+                        if (data.statusCode == 200) {
+
+
+                        }
+                    });
+                },
+                initCos() {
+                    const vm = this;
+                    vm.cos = new COS({
+                        SecretId: vm.SecretId,
+                        SecretKey: vm.SecretKey,
+                        Protocol: 'https:'
+                    });
+                },
+                setKey() {
+                    const vm = this;
+                    const Key = `<textarea class="weui-textarea" id="Key" placeholder="SecretKey" rows="4"></textarea>`;
+                    const setItemSecretKey = weui.alert(Key, function () {
+                        let keyVal = $('#Key').val();
+                        if (!keyVal) {
+                            weui.topTips('no SecretKey null');
+                        } else {
+                            localStorage.setItem("SecretKey", keyVal.replace(/\s*/g, ""));
+                            window.location.reload();
+                        }
+                        return false;
+                    });
+                },
+                //
+                setItem(Location) {
+                    var path = this.path;
+                    var key;
+
+                    if (path == "img") {
+                        key = imgfilelist;
+                    } else if (path == "poster") {
+                        key = posterfilelist;
+                    } else if (path == "video") {
+                        key = videofilelist;
+                    }
+                    this[key].push('https://' + data.Location);
+                    console.log(path+'___'+this[key])
+                }
+            },
+            mounted() {
+                const SecretKey = this.SecretKey;
+                if (SecretKey) {
+                    this.initCos();
+                } else {
+                    this.setKey();
+                }
+            },
+        });
+
+        // sessionStorage.setItem("key", "value");
+        // sessionStorage.getItem("key");
+        // sessionStorage.removeItem("key");
+
+    </script>
+</body>
+
+</html>
