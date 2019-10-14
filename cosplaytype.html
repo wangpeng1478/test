@@ -147,6 +147,7 @@
                             vm.loading.hide();
                             if (res.code === 0) {
                                 vm.categorylist = res.data;
+                                vm.form.paixu =  -vm.categorylist.length;
                             } else {
                                 weui.topTips(res.msg);
                             }

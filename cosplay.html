@@ -218,7 +218,7 @@
                     pid: 0,
                     content: new Date().getTime(),
                     paixu: 0,
-                    keywords: 'img'
+                    keywords: 'video'
                 }
             },
             methods: {
@@ -286,6 +286,7 @@
                                         console.log(rest)
                                         if (rest.code === 0) {
                                             vm.newsList = rest.data.result;
+                                            vm.form.paixu = -vm.newsList.length;
                                         } else {
                                             weui.topTips(rest.msg);
                                         }
