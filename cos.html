@@ -91,17 +91,18 @@
                 },
                 putObject(file) {
                     const vm = this;
+                    let loading = weui.loading('loading');
                     vm.cos.putObject({
                         Bucket: vm.Bucket,
                         Region: vm.Region,
                         Key: `${vm.path}/${vm.Key}/${file.name}`,
                         Body: file,
-                    }, function (err, data) {
+                    }, function (err, data){
                         document.getElementById('file-selector').value = "";
                         if (data.statusCode == 200) {
-
-
+                            vm.setItems(data.Location)
                         }
+                        loading.hide();
                     });
                 },
                 initCos() {
@@ -127,19 +128,22 @@
                     });
                 },
                 //
-                setItem(Location) {
+                setItems(url) {
                     var path = this.path;
                     var key;
 
                     if (path == "img") {
-                        key = imgfilelist;
+                        this.imgfilelist.push('https://' + url);
+                        console.log(path+'___'+ this.imgfilelist)
                     } else if (path == "poster") {
-                        key = posterfilelist;
+                        this.posterfilelist.push('https://' + url);
+                        console.log(path+'___'+ this.posterfilelist)
                     } else if (path == "video") {
-                        key = videofilelist;
+                        this.videofilelist.push('https://' + url);
+                        console.log(path+'___'+ this.videofilelist)
                     }
-                    this[key].push('https://' + data.Location);
-                    console.log(path+'___'+this[key])
+                   
+                    
                 }
             },
             mounted() {
