@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <title>cloud</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="" type="image/x-icon" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/2.0.0/style/weui.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/vue-lazyload/1.3.2/vue-lazyload.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script src="weui.min.js"></script>
+    <script src="https://imgcache.qq.com/qcloud/tcbjs/1.3.2/tcb.js"></script>
+    <script>
+        var app = tcb.init({
+            env: 'cosplay-co9en'
+        })
+        var auth = app.auth()
+        var db = app.database();
+            db.collection('user').get().then((res) => {
+                var data = res.data;
+                console.log(data);
+            })
+    </script>
+</body>
+
+</html>
